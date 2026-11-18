@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Enrollment extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['user_id', 'study_group_id', 'status', 'enrolled_at'];
+
+    protected $casts = ['enrolled_at' => 'date'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function studyGroup()
+    {
+        return $this->belongsTo(StudyGroup::class);
+    }
+}
