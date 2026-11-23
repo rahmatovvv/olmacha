@@ -43,6 +43,10 @@
                     <td>
                         <div class="table-actions">
                             <a href="{{ route('admin.students.edit', $student) }}" class="btn btn-soft btn-sm">Tahrirlash</a>
+                            <form method="POST" action="{{ route('admin.students.password', $student) }}" onsubmit="return confirm('Yangi parol yaratilsinmi? Eski parol ishlamay qoladi.');">
+                                @csrf
+                                <button type="submit" class="btn btn-soft btn-sm">Parol</button>
+                            </form>
                             <form method="POST" action="{{ route('admin.students.destroy', $student) }}" onsubmit="return confirm('Talabani o‘chirishni tasdiqlaysizmi?');">
                                 @csrf
                                 @method('DELETE')

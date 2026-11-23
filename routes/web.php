@@ -85,6 +85,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('courses', AdminCourseController::class)->except('show');
         Route::resource('teachers', AdminTeacherController::class)->except('show');
         Route::resource('students', AdminStudentController::class)->except('show');
+        Route::post('students/{student}/password', [AdminStudentController::class, 'resetPassword'])
+            ->name('students.password');
 
         Route::resource('groups', AdminStudyGroupController::class);
         Route::post('groups/{group}/students', [AdminStudyGroupController::class, 'storeStudent'])

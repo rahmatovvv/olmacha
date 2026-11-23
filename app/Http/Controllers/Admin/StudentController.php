@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
@@ -92,6 +93,26 @@ class StudentController extends Controller
         $student->save();
 
         return redirect()->route('admin.students.index')->with('success', "Talaba ma'lumotlari yangilandi.");
+    }
+
+    /**
+     * Talaba uchun tasodifiy kuchli parol yaratadi va uni bir marta ko'rsatadi.
+     */
+    public function resetPassword(User $student)
+    {
+        abort_unless($student->isStudent(), 404);
+
+        $password = Str::random(12);
+
+        $student->forceFill([
+            'password' => Hash::make($password),
+            'remember_token' => null,
+        ])->save();
+
+        return redirect()->route('admin.students.index')->with(
+            'success',
+            "{$student->name} uchun yangi parol: {$password} — parolni talabaga yetkazing, u boshqa ko'rsatilmaydi."
+        );
     }
 
     public function destroy(User $student)
