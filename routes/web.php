@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
+use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\StudyGroupController as AdminStudyGroupController;
@@ -81,6 +82,9 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('password', [AdminPasswordController::class, 'edit'])->name('password.edit');
+        Route::put('password', [AdminPasswordController::class, 'update'])->name('password.update');
 
         Route::resource('courses', AdminCourseController::class)->except('show');
         Route::resource('teachers', AdminTeacherController::class)->except('show');

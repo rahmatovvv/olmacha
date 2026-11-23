@@ -24,6 +24,7 @@
             <a href="{{ route('admin.students.index') }}" class="panel-nav-link {{ request()->routeIs('admin.students.*') ? 'is-active' : '' }}">Talabalar</a>
             <a href="{{ route('admin.applications.index') }}" class="panel-nav-link {{ request()->routeIs('admin.applications.*') ? 'is-active' : '' }}">Arizalar</a>
             <a href="{{ route('admin.payments.index') }}" class="panel-nav-link {{ request()->routeIs('admin.payments.*') ? 'is-active' : '' }}">To‘lovlar</a>
+            <a href="{{ route('admin.password.edit') }}" class="panel-nav-link {{ request()->routeIs('admin.password.*') ? 'is-active' : '' }}">Parol</a>
         </nav>
 
         <div class="panel-sidebar-foot">
