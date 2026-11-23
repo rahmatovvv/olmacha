@@ -33,7 +33,8 @@ class PasswordController extends Controller
         ])->save();
 
         $request->session()->regenerate();
+        $request->user()->terminateOtherSessions($request->session()->getId());
 
-        return redirect()->route('admin.password.edit')->with('success', 'Parol yangilandi.');
+        return redirect()->route('admin.password.edit')->with('success', 'Parol yangilandi. Boshqa qurilmalardagi sessiyalar yopildi.');
     }
 }

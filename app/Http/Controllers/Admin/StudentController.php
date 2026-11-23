@@ -109,6 +109,8 @@ class StudentController extends Controller
             'remember_token' => null,
         ])->save();
 
+        $student->terminateOtherSessions();
+
         return redirect()->route('admin.students.index')->with(
             'success',
             "{$student->name} uchun yangi parol: {$password} — parolni talabaga yetkazing, u boshqa ko'rsatilmaydi."
