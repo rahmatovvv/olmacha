@@ -13,25 +13,51 @@ use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $admin = User::create([
-            'name' => 'Dilshod Karimov',
-            'email' => 'admin@olmacha.uz',
-            'phone' => '+998 90 123 45 67',
-            'role' => 'admin',
-            'password' => Hash::make('admin123'),
-        ]);
+        // Admin paroli faqat ADMIN_PASSWORD muhit o‘zgaruvchisidan olinadi.
+        // Lokal muhitda o‘zgaruvchi bo‘lmasa, tasodifiy parol yaratiladi.
+        $adminEmail = env('ADMIN_EMAIL', 'admin@olmacha.uz');
+        $adminPassword = env('ADMIN_PASSWORD');
+        $generatedAdminPassword = null;
+
+        if (! is_string($adminPassword) || $adminPassword === '') {
+            $adminPassword = null;
+
+            if (app()->environment('local')) {
+                $generatedAdminPassword = Str::random(20);
+                $adminPassword = $generatedAdminPassword;
+            }
+        }
+
+        if ($adminPassword !== null) {
+            User::create([
+                'name' => 'Dilshod Karimov',
+                'email' => $adminEmail,
+                'phone' => '+998 90 123 45 67',
+                'role' => 'admin',
+                'password' => Hash::make($adminPassword),
+            ]);
+        } else {
+            $this->command?->warn('ADMIN_PASSWORD o‘rnatilmagan — admin hisobi yaratilmadi.');
+        }
+
+        // Demo talaba paroli ham tayyor (bashorat qilsa bo‘ladigan) bo‘lmasligi kerak.
+        $studentPassword = env('DEMO_STUDENT_PASSWORD');
+        if (! is_string($studentPassword) || $studentPassword === '') {
+            $studentPassword = app()->environment('local') ? 'talaba123' : Str::random(40);
+        }
 
         $demoStudent = User::create([
             'name' => 'Malika Yusupova',
             'email' => 'talaba@olmacha.uz',
             'phone' => '+998 91 234 56 78',
             'role' => 'student',
-            'password' => Hash::make('talaba123'),
+            'password' => Hash::make($studentPassword),
         ]);
 
         $courses = [
@@ -204,7 +230,7 @@ class DatabaseSeeder extends Seeder
                 'email' => $row[1],
                 'phone' => $row[2],
                 'role' => 'student',
-                'password' => Hash::make('talaba123'),
+                'password' => Hash::make($studentPassword),
             ]);
         }
 
@@ -300,7 +326,16 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $this->command->info('Admin: admin@olmacha.uz / admin123');
-        $this->command->info('Talaba: talaba@olmacha.uz / talaba123');
+        if ($adminPassword !== null) {
+            $this->command?->info('Admin: '.$adminEmail);
+
+            if ($generatedAdminPassword !== null) {
+                $this->command?->warn('Lokal admin paroli: '.$generatedAdminPassword);
+            }
+        }
+
+        if (app()->environment('local')) {
+            $this->command?->info('Demo talaba: talaba@olmacha.uz / '.$studentPassword);
+        }
     }
 }
